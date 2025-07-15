@@ -79,7 +79,7 @@ PICOTS provides structured inclusion/exclusion criteria that must be converted i
 - Support research transparency standards
 
 ### Performance Expectations
-- **Accuracy**: Should match expert reviewer decisions >80% of time
+- **Accuracy**: Should match expert reviewer decisions >90% of time
 - **Speed**: Process 100-1000 abstracts per hour (depending on API limits)
 - **Consistency**: Same abstract with same criteria should yield same result
 - **Transparency**: Every decision must be explainable
