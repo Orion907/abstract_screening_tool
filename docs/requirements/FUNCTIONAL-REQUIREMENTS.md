@@ -6,9 +6,9 @@
 **Description**: System shall accept screening criteria via unified text input
 
 **Requirements**:
-- Single text area for PICOTS criteria or custom prompts
+- Single text area for Population, Intervention, Comparison (PIC)  criteria or custom prompts
 - Support copy/paste from research protocols or existing prompts
-- Provide PICOTS template for users creating criteria from scratch
+- Provide PIC template for users creating criteria from scratch
 - Handle formatting inconsistencies in pasted text
 - Validate that input area contains screening criteria
 
@@ -17,7 +17,7 @@
 
 **Requirements**:
 - Support CSV file upload (up to 10MB)
-- Validate required columns: Title, Authors, Abstract text
+- Validate required columns: Reference ID, Title, Abstract text
 - Handle common academic database export formats
 - Display upload status and file summary
 
