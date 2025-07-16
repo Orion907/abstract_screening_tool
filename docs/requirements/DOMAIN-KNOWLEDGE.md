@@ -1,97 +1,62 @@
-# Domain Knowledge: Implementation Context
+# Domain Knowledge: Abstract Screening Implementation
 
-## Systematic Review Abstract Screening
+## System Purpose
+Automate systematic review abstract screening using PIC criteria. Process DistillerSR CSV exports to generate include/exclude decisions with reasoning.
 
-### Purpose
-Systematic reviews require screening thousands of research abstracts to identify relevant studies. Traditional process involves two reviewers independently applying inclusion/exclusion criteria, then resolving disagreements. This tool automates the initial screening phase.
+## Input Specification
+**CSV Structure (DistillerSR Export):**
+- Required columns: Reference ID, Title, Abstract text
+- Expected volume: 1,000-10,000+ abstracts per batch
 
-### Target Users
-Research teams conducting systematic reviews who need to process large volumes (1,000-10,000+) of abstracts efficiently while maintaining audit trails.
+## PIC Framework Implementation
+**Criteria Components:**
+- **Population**: Patient/subject demographics, conditions, settings
+- **Intervention**: Specific therapies, procedures, exposures
+- **Comparator**: Control or alternative treatments
 
-## PICOTS Framework
+**Prompt Requirements:**
+- Convert PIC criteria to explicit include/exclude instructions
+- Handle incomplete/ambiguous criteria gracefully
+- Accept Word document paste inputs (formatting issues)
+- Support custom prompts as alternative to structured PIC
 
-### Implementation Requirements
-PICOTS provides structured inclusion/exclusion criteria that must be converted into effective LLM prompts.
+## LLM Integration Specifications
 
-**Components and Prompt Translation:**
-- **Population**: Patient/subject characteristics → Filter by demographics, conditions, settings
-- **Intervention**: Treatment/exposure being studied → Identify specific therapies, procedures, exposures  
-- **Comparison**: Control or alternative treatment → Distinguish intervention from control groups
-- **Outcome**: Measured endpoints → Recognize relevant outcome measurements
-- **Timeframe**: Study duration requirements → Validate minimum follow-up periods
-- **Study Design**: Research methodology → Filter by study types (RCT, cohort, etc.)
+### Response Format
+```json
+{
+  "decision": "Include|Exclude",
+  "reasoning": "Brief explanation based on PIC criteria"
+}
+```
 
-### Technical Considerations
-- Users may paste PICOTS from Word docs (handle formatting issues)
-- Criteria can be incomplete or ambiguous (system should handle gracefully)
-- Some users prefer custom prompts over structured PICOTS
-
-## Abstract Screening Workflow
-
-### Input Processing
-**CSV Structure Expected:**
-- Required: Title, Authors, Abstract text
-- Optional: DOI, Journal, Year, Keywords
-- Handle academic database exports (PubMed, Embase, etc.)
-
-### Decision Categories
-- **Include**: Clearly meets criteria, proceed to full-text review
-- **Exclude**: Doesn't meet criteria, document reason
-- **Uncertain**: Insufficient information, typically defaults to inclusion
+### Decision Logic
+- **Include**: Meets PIC criteria or insufficient information to exclude
+- **Exclude**: Clearly violates PIC criteria
+- **Bias**: Conservative toward inclusion when uncertain
 
 ### Common Exclusion Patterns
 - Wrong population (age, condition mismatch)
 - Wrong intervention (different treatment/dose)
-- Wrong study type (editorials, case reports)
-- Wrong outcomes (doesn't measure target endpoints)
-- Language/publication restrictions
+- Wrong or missing comparator
+- Study type incompatible with intervention comparison
 
-## LLM Integration Requirements
+## Output Requirements
+**CSV Columns:**
+- Reference ID
+- Title
+- Label (Include|Exclude)
+- Reason (PIC-based explanation)
 
-### Prompt Engineering Needs
-- **Consistency**: Same criteria must yield same decisions across similar abstracts
-- **Clarity**: Explicit instructions for include/exclude logic
-- **Conservative Bias**: Prefer inclusion when uncertain (standard practice)
-- **Structured Output**: Request consistent response format for parsing
-
-### Expected LLM Response Format
-```json
-{
-  "decision": "Include|Exclude|Uncertain",
-  "reasoning": "Brief explanation of decision",
-  "confidence": "High|Medium|Low"
-}
-```
-
-### Error Handling Requirements
-- **API Failures**: Retry with exponential backoff
-- **Rate Limiting**: Batch processing with appropriate delays
-- **Invalid Responses**: Request reformatted output, flag for manual review
-- **Inconsistent Decisions**: Log potential issues for quality review
-
-## Quality and Compliance
-
-### Audit Trail Requirements
-- Log all prompts sent to LLM
-- Save complete LLM responses
-- Record timestamps and model versions
-- Enable decision reconstruction
-- Support research transparency standards
-
-### Performance Expectations
-- **Accuracy**: Should match expert reviewer decisions >90% of time
-- **Speed**: Process 100-1000 abstracts per hour (depending on API limits)
-- **Consistency**: Same abstract with same criteria should yield same result
-- **Transparency**: Every decision must be explainable
-
-### Technical Constraints
-- **Text Limits**: Abstract + prompt must fit within LLM context window
-- **Cost Management**: Batch processing to optimize API usage
-- **Rate Limits**: Respect provider API limitations
-- **Data Security**: No persistent storage of research data
+## Technical Constraints
+- **Context Limits**: Abstract + prompt must fit LLM context window
+- **Error Handling**: Retry API failures, handle rate limits, flag invalid responses
+- **Audit Trail**: Log prompts, responses, timestamps, model versions
+- **Performance**: >90% accuracy vs expert reviewers, 100-1000 abstracts/hour
+- **Security**: No persistent storage of research data
 
 ## Implementation Priority
-1. **Core Function**: Reliable include/exclude decisions with reasoning
-2. **User Experience**: Simple workflow from criteria input to results download
-3. **Quality Assurance**: Consistent decisions and complete audit trail
-4. **Scalability**: Handle typical systematic review volumes efficiently
+1. Reliable PIC-based decisions with reasoning
+2. DistillerSR CSV input/output workflow
+3. Complete audit trail
+4. Batch processing efficiency
