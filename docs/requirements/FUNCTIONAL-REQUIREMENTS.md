@@ -6,7 +6,7 @@
 **Description**: System shall accept screening criteria via unified text input
 
 **Requirements**:
-- Single text area for Population, Intervention, Comparison (PIC)  criteria or custom prompts
+- Single text area for PIC criteria or custom prompts
 - Support copy/paste from research protocols or existing prompts
 - Provide PIC template for users creating criteria from scratch
 - Handle formatting inconsistencies in pasted text
@@ -25,7 +25,7 @@
 **Description**: System shall screen abstracts using LLM API
 
 **Requirements**:
-- Generate structured prompts from user screening criteria
+- Generate structured prompts from user PIC screening criteria
 - Process abstracts in configurable batches with progress tracking
 - Handle API rate limits and errors gracefully
 - Support multiple LLM providers (OpenAI, Anthropic)
@@ -34,9 +34,9 @@
 **Description**: System shall provide structured screening decisions
 
 **Requirements**:
-- Return Include/Exclude/Uncertain decision for each abstract
-- Provide reasoning text for each decision
-- Maintain original abstract metadata (title, authors, DOI, etc.)
+- Return binary Include/Exclude decision for each abstract
+- Provide reasoning text based on PIC criteria for each decision
+- Maintain original abstract metadata (Reference ID, Title)
 - Generate downloadable CSV with results and audit trail
 
 ## User Interface Requirements
@@ -45,7 +45,7 @@
 **Description**: Single-page web application with clear workflow
 
 **Requirements**:
-- Unified text area for screening criteria input
+- Unified text area for PIC screening criteria input
 - CSV file upload with validation
 - Progress tracking during processing
 - Results display and download
@@ -67,7 +67,7 @@
 
 **Requirements**:
 - Clean HTML tags and normalize formatting from abstracts
-- Generate structured prompts from user screening criteria
+- Generate structured prompts from user PIC screening criteria
 - Handle text encoding issues (UTF-8)
 - Truncate overly long abstracts if necessary
 
@@ -80,5 +80,6 @@
 - Use standardized prompt templates for consistency
 - Maintain complete audit trail (inputs, outputs, timestamps)
 - Log API interactions for troubleshooting
-- Support manual review of uncertain decisions
+- Support manual review of binary decisions
 - Enable reconstruction of all screening decisions
+- Ensure all reasoning explicitly references PIC criteria

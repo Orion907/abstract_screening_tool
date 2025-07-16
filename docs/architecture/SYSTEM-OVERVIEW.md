@@ -2,40 +2,41 @@
 
 ## High-Level Architecture
 
-The Abstract Screening Tool follows a pipeline architecture that transforms research protocol criteria into automated abstract screening decisions.
+The Abstract Screening Tool follows a pipeline architecture that transforms research protocol PIC criteria into automated abstract screening decisions.
 
 ## Core Components
 
 ### 1. User Interface Layer
 - **Streamlit GUI**: Web-based interface for researchers
-- **Input Handlers**: PICOTS criteria input and CSV file upload
-- **Results Display**: Screening decisions with reasoning
+- **Input Handlers**: PIC (Population, Intervention, Comparator) criteria input and CSV file upload
+- **Input Format**: Expected columns Reference ID, Title, Abstract text
+- **Results Display**: Reference ID, Title, Decision, Reasoning based on PIC criteria
 
 ### 2. Data Processing Layer
-- **PICOTS Parser**: Extracts and structures inclusion/exclusion criteria
+- **PIC Parser**: Extracts and structures inclusion/exclusion criteria
 - **Abstract Processor**: Handles CSV imports from academic databases
-- **Prompt Generator**: Converts PICOTS criteria into LLM-optimized prompts
+- **Prompt Generator**: Converts PIC criteria into LLM-optimized prompts
 
 ### 3. LLM Integration Layer
 - **API Clients**: OpenAI and Anthropic API interfaces
-- **Prompt Engineering**: Structured prompts for consistent screening
-- **Response Parser**: Converts LLM outputs to structured decisions
+- **Prompt Engineering**: Structured prompts for consistent PIC-based screening
+- **Response Parser**: Converts LLM outputs to structured binary decisions
 
 ### 4. Output Layer
 - **Decision Formatter**: Structures include/exclude decisions
 - **CSV Exporter**: Generates results in importable format
-- **Audit Trail**: Maintains reasoning transparency
+- **Audit Trail**: Maintains PIC-based reasoning transparency
 
 ## Data Flow
 
 ```
 Research Protocol (Word/PDF)
     ↓
-[User copies PICOTS criteria]
+[User copies PIC criteria]
     ↓
 Streamlit GUI Input Form
     ↓
-PICOTS Parser & Validator
+PIC Parser & Validator
     ↓
 Abstract CSV Upload
     ↓
@@ -54,10 +55,11 @@ CSV Export with Results
 
 ## Key Design Decisions
 
-### PICOTS-Centric Approach
-- Uses established systematic review methodology
+### PIC-Centric Approach
+- Uses established systematic review methodology (Population, Intervention, Comparator)
 - Ensures clinical relevance of screening criteria
 - Provides structured framework for LLM prompts
+- All reasoning must explicitly reference PIC criteria
 
 ### Streamlit for GUI
 - Familiar to research community

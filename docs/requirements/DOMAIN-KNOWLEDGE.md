@@ -1,7 +1,7 @@
 # Domain Knowledge: Abstract Screening Implementation
 
 ## System Purpose
-Automate systematic review abstract screening using PIC criteria. Process DistillerSR CSV exports to generate include/exclude decisions with reasoning.
+Automate systematic review abstract screening using PIC criteria. Process DistillerSR CSV exports to generate include/exclude decisions with reasoning based on PIC criteria.
 
 ## Input Specification
 **CSV Structure (DistillerSR Export):**
@@ -34,6 +34,7 @@ Automate systematic review abstract screening using PIC criteria. Process Distil
 - **Include**: Meets PIC criteria or insufficient information to exclude
 - **Exclude**: Clearly violates PIC criteria
 - **Bias**: Conservative toward inclusion when uncertain
+- **Reasoning**: Must explicitly reference PIC criteria in explanation
 
 ### Common Exclusion Patterns
 - Wrong population (age, condition mismatch)
@@ -45,8 +46,8 @@ Automate systematic review abstract screening using PIC criteria. Process Distil
 **CSV Columns:**
 - Reference ID
 - Title
-- Label (Include|Exclude)
-- Reason (PIC-based explanation)
+- Decision (Include|Exclude)
+- Reasoning (PIC-based explanation)
 
 ## Technical Constraints
 - **Context Limits**: Abstract + prompt must fit LLM context window
