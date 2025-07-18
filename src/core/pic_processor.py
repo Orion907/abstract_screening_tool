@@ -68,22 +68,22 @@ class PICProcessor:
         Returns:
             str: Extracted component text or None if not found
         """
-        # Define patterns for each component type
+        # Define patterns for each component type - order matters!
         patterns = {
             "population": [
-                r"(?:population|participants?|subjects?|patients?)\s*:?\s*([^\n]+)",
-                r"(?:p)\s*[:=]\s*([^\n]+)",
-                r"(?:study population|target population)\s*:?\s*([^\n]+)"
+                r"^\s*p\s*[:=]\s*([^\n\r]+)",  # Single letter first
+                r"(?:population|participants?|subjects?|patients?)\s*:?\s*([^\n\r]+)",
+                r"(?:study population|target population)\s*:?\s*([^\n\r]+)"
             ],
             "intervention": [
-                r"(?:intervention|treatment|therapy|drug|medication)\s*:?\s*([^\n]+)",
-                r"(?:i)\s*[:=]\s*([^\n]+)",
-                r"(?:experimental|active treatment)\s*:?\s*([^\n]+)"
+                r"^\s*i\s*[:=]\s*([^\n\r]+)",  # Single letter first
+                r"(?:intervention|treatment|therapy|drug|medication)\s*:?\s*([^\n\r]+)",
+                r"(?:experimental|active treatment)\s*:?\s*([^\n\r]+)"
             ],
             "comparator": [
-                r"(?:comparator|comparison|control|placebo)\s*:?\s*([^\n]+)",
-                r"(?:c)\s*[:=]\s*([^\n]+)",
-                r"(?:control group|standard care)\s*:?\s*([^\n]+)"
+                r"^\s*c\s*[:=]\s*([^\n\r]+)",  # Single letter first
+                r"(?:comparator|comparison|control|placebo)\s*:?\s*([^\n\r]+)",
+                r"(?:control group|standard care)\s*:?\s*([^\n\r]+)"
             ]
         }
         
@@ -93,8 +93,8 @@ class PICProcessor:
             if match:
                 extracted = match.group(1).strip()
                 # Clean up common artifacts
-                extracted = re.sub(r'^\W+', '', extracted)  # Remove leading punctuation
-                extracted = re.sub(r'\W+$', '', extracted)  # Remove trailing punctuation
+                extracted = re.sub(r'^[^\w\s]+', '', extracted)  # Remove leading punctuation
+                extracted = re.sub(r'[^\w\s\.\)]+$', '', extracted)  # Remove trailing punctuation but keep periods and parentheses
                 if extracted:
                     return extracted
         
@@ -117,13 +117,13 @@ class PICProcessor:
         }
         
         # Check minimum length requirements
-        if len(pic_criteria.population) < 5:
+        if len(pic_criteria.population.strip()) < 5:
             validation_results['warnings'].append("Population criteria seems very short")
         
-        if len(pic_criteria.intervention) < 5:
+        if len(pic_criteria.intervention.strip()) < 5:
             validation_results['warnings'].append("Intervention criteria seems very short")
         
-        if len(pic_criteria.comparator) < 5:
+        if len(pic_criteria.comparator.strip()) < 5:
             validation_results['warnings'].append("Comparator criteria seems very short")
         
         # Check for overly generic terms
@@ -187,7 +187,7 @@ class PICProcessor:
         standardized = standardized[0].upper() + standardized[1:] if standardized else ""
         
         # Remove trailing punctuation except periods
-        standardized = re.sub(r'[^\w\s\.]$', '', standardized)
+        standardized = re.sub(r'[!?;,]+$', '', standardized)
         
         return standardized
     
