@@ -127,8 +127,8 @@ class TextCleaner:
             str: Text with normalized punctuation
         """
         # Normalize quotes
-        text = re.sub(r'[""]', '"', text)
-        text = re.sub(r'['']', "'", text)
+        text = re.sub(r'[\u201C\u201D]', '"', text)  # Smart double quotes
+        text = re.sub(r'[\u2018\u2019]', "'", text)  # Smart single quotes
         
         # Normalize dashes
         text = re.sub(r'[–—]', '-', text)
