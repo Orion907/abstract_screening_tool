@@ -56,6 +56,11 @@ class CSVProcessor:
             abstracts = []
             for _, row in df.iterrows():
                 try:
+                    # Skip rows with missing critical data
+                    if pd.isna(row['Reference ID']) or pd.isna(row['Title']) or pd.isna(row['Abstract']):
+                        print(f"Warning: Skipping row with missing critical data: {row.get('Reference ID', 'Unknown')}")
+                        continue
+                    
                     abstract = Abstract(
                         reference_id=str(row['Reference ID']),
                         title=str(row['Title']),

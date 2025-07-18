@@ -6,7 +6,6 @@ Simplified for demo implementation with basic cleaning operations.
 """
 
 import re
-from typing import str
 
 
 class TextCleaner:

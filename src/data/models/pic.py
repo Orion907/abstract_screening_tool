@@ -6,10 +6,9 @@ used in abstract screening. Simplified for demo implementation with basic valida
 """
 
 from dataclasses import dataclass
-from typing import Optional
 
 
-@dataclass
+@dataclass(frozen=True)
 class PICCriteria:
     """
     Represents the Population, Intervention, Comparator criteria for abstract screening.
