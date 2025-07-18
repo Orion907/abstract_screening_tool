@@ -5,7 +5,6 @@ This module converts PIC criteria into optimized LLM prompts for abstract screen
 Simplified for demo with one well-tested prompt template.
 """
 
-from typing import str
 from ..data.models import PICCriteria, Abstract
 
 
